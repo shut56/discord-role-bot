@@ -19,3 +19,9 @@ Run development server
 ```
 yarn run watch:server
 ```
+
+## Linter
+Linter is launched before each commit, however, you can start the check manually
+```
+yarn run lint
+```

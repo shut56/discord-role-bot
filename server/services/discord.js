@@ -1,33 +1,46 @@
-const { Client, Intents } = require('discord.js')
+const fs = require('fs')
+const { Client, Collection, Intents } = require('discord.js')
+
 const { token } = require('../config')
+const deployCommands = require('./deploy-commands')
+
+deployCommands()
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 
-// When the client is ready, run this code (only once)
-client.once('ready', () => {
-	console.log('Role Bot ready!')
+client.commands = new Collection()
+
+const commandFiles = fs.readdirSync(`${__dirname}/commands`)
+  .filter((file) => file.endsWith('.js'))
+
+commandFiles.forEach((file) => {
+  const command = require(`./commands/${file}`)
+  client.commands.set(command.data.name, command)
 })
 
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) {
-    return
-  }
+// When the client is ready, run this code (only once)
+client.once('ready', (c) => {
+  console.log(`Ready! Logged in as ${c.user.tag}`)
+})
 
-	const { commandName } = interaction
+client.on('interactionCreate', async (interaction) => {
+  console.log(`${interaction.user.tag} in #${interaction.channel.name} triggered an interaction.`)
+  if (!interaction.isCommand()) return
 
-  switch (commandName) {
-    case 'ping': {
-      const user = interaction.options.getUser('target')
-      await interaction.reply(`Pong for ${user}!`)
-      break
-    }
-    case 'company': {
-      await interaction.reply('Your company')
-      break
-    }
-    default:
-      await interaction.reply('Invalid command!')
+  const command = client.commands.get(interaction.commandName)
+
+  if (!command) return
+
+  try {
+    await command.execute(interaction)
+  } catch (err) {
+    console.error(err)
+    await interaction
+      .reply({
+        content: 'There was an error while executing this command!',
+        ephemeral: true
+      })
   }
 })
 
