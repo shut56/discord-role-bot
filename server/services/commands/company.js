@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { guildId } = require('../../config')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -13,7 +12,7 @@ module.exports = {
     const companyName = interaction.options.getString('company').toLowerCase()
     const roles = await interaction.member.guild.roles
       .fetch()
-      .then((roles) => roles.map(({ name, id }) => ({ name: name.toLowerCase(), id })))
+      .then((r) => r.map(({ name, id }) => ({ name: name.toLowerCase(), id })))
       .catch(() => [])
 
     const roleNameIndex = roles.map((r) => r.name).indexOf(companyName)

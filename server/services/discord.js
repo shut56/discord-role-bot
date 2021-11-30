@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { Client, Collection, Intents } = require('discord.js')
 
-const { token, guildId } = require('../config')
+const { token } = require('../config')
 const deployCommands = require('./deploy-commands')
 
 deployCommands()
@@ -22,13 +22,6 @@ commandFiles.forEach((file) => {
 // When the client is ready, run this code (only once)
 client.once('ready', (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`)
-  // client.api
-  //   .guilds(guildId).roles
-  //   .get()
-  //   .then((list) => {
-  //     guildList = [...list.map((g) => g.name)]
-  //   })
-  //   .catch((err) => console.error(err))
 })
 
 client.on('interactionCreate', async (interaction) => {
