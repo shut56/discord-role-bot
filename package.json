@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "watch:server": "nodemon ./server/server.js",
-    "register": "node ./server/services/deploy-commands.js"
+    "register": "node ./server/services/deploy-commands.js",
+    "lint": "eslint ./server/**.js",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@discordjs/builders": "^0.8.2",
@@ -17,5 +19,8 @@
     "eslint": "^8.3.0",
     "express": "^4.17.1",
     "nodemon": "^2.0.15"
+  },
+  "devDependencies": {
+    "husky": "^7.0.0"
   }
 }
