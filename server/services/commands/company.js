@@ -1,10 +1,40 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const { guildId } = require('../../config')
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('company')
-    .setDescription('Sets you a role with your company name.'),
+    .setDescription('You can add the name of the company you work for.')
+    .addStringOption(option =>
+      option.setName('company')
+        .setDescription('Input the name of the company')
+        .setRequired(true)),
   async execute(interaction) {
-    await interaction.reply('Your company name')
+    const companyName = interaction.options.getString('company').toLowerCase()
+    const roles = await interaction.member.guild.roles
+      .fetch()
+      .then((roles) => roles.map(({ name, id }) => ({ name: name.toLowerCase(), id })))
+      .catch(() => [])
+
+    const roleNameIndex = roles.map((r) => r.name).indexOf(companyName)
+
+    let roleId = ''
+
+    if (roleNameIndex === -1) {
+      roleId = await interaction.member.guild.roles
+        .create({
+          name: companyName,
+          hoist: true,
+          mentionable: true,
+        })
+        .then((r) => r.id)
+        .catch(console.error)
+    } else {
+      roleId = roles[roleNameIndex].id
+    }
+
+    interaction.member.roles.add(roleId)
+
+    await interaction.reply({ content: `Thank you ${interaction.user.tag}! Welcome to ${companyName}!`, ephemeral: true })
   }
 }

@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { Client, Collection, Intents } = require('discord.js')
 
-const { token } = require('../config')
+const { token, guildId } = require('../config')
 const deployCommands = require('./deploy-commands')
 
 deployCommands()
@@ -11,7 +11,7 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 
 client.commands = new Collection()
 
-const commandFiles = fs.readdirSync('./commands')
+const commandFiles = fs.readdirSync(`${__dirname}/commands`)
   .filter((file) => file.endsWith('.js'))
 
 commandFiles.forEach((file) => {
@@ -20,11 +20,19 @@ commandFiles.forEach((file) => {
 })
 
 // When the client is ready, run this code (only once)
-client.once('ready', () => {
-  console.log('Role Bot ready!')
+client.once('ready', (c) => {
+  console.log(`Ready! Logged in as ${c.user.tag}`)
+  // client.api
+  //   .guilds(guildId).roles
+  //   .get()
+  //   .then((list) => {
+  //     guildList = [...list.map((g) => g.name)]
+  //   })
+  //   .catch((err) => console.error(err))
 })
 
 client.on('interactionCreate', async (interaction) => {
+  console.log(`${interaction.user.tag} in #${interaction.channel.name} triggered an interaction.`)
   if (!interaction.isCommand()) return
 
   const command = client.commands.get(interaction.commandName)

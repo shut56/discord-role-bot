@@ -6,7 +6,7 @@ const { clientId, guildId, token } = require('../config')
 
 const commands = []
 
-const commandFiles = fs.readdirSync('./commands')
+const commandFiles = fs.readdirSync(`${__dirname}/commands`)
   .filter((file) => file.endsWith('.js'))
 
 commandFiles.forEach((file) => {
