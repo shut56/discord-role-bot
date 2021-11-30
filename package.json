@@ -6,7 +6,8 @@
   "scripts": {
     "watch:server": "nodemon ./server/server.js",
     "register": "node ./server/services/deploy-commands.js",
-    "lint": "eslint ./server/**.js",
+    "lint": "eslint './server/**/*.js'",
+    "prettier": "prettier './server/**/*.js' --write --no-error-on-unmatched-pattern",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -17,8 +18,10 @@
     "discord.js": "^13.3.1",
     "dotenv": "^10.0.0",
     "eslint": "^8.3.0",
+    "eslint-config-prettier": "^8.3.0",
     "express": "^4.17.1",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.0"
   },
   "devDependencies": {
     "husky": "^7.0.0"
